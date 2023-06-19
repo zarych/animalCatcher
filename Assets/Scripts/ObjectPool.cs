@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -21,7 +20,7 @@ public class ObjectPool : MonoBehaviour
 
     void Start()
     {
-        for(int i = 0; i < animalsMaxCount; i++)
+        for (int i = 0; i < animalsMaxCount; i++)
         {
             GameObject obj = Instantiate(animalPrefab);
             _pooledObjects.Add(obj);
@@ -29,12 +28,12 @@ public class ObjectPool : MonoBehaviour
         }
     }
 
-    public GameObject GetObjectFromPool() 
+    public GameObject GetObjectFromPool()
     {
         for (int i = 0; i < _pooledObjects.Count; i++)
         {
             if (!_pooledObjects[i].activeInHierarchy)
-            { 
+            {
                 return _pooledObjects[i];
             }
         }

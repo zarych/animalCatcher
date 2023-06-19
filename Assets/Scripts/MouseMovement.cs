@@ -10,9 +10,9 @@ public class MouseMovement : MonoBehaviour
     [SerializeField] private float movementSpeed = 1f;
 
     private Vector3 _target;
-    private Tweener _moveTweener; 
+    private Tweener _moveTweener;
 
-    private void OnMouseDown() 
+    private void OnMouseDown()
     {
         _target = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         _target.z = transform.position.z;

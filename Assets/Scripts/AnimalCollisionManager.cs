@@ -30,7 +30,7 @@ public class AnimalsCollisionManager : MonoBehaviour
             IsInGroup = true;
             _obj = collision.gameObject;
             _positionDelta = transform.position - _obj.transform.position;
-            
+
             EventBus.OnPlayerTouchedAnimal?.Invoke(_positionDelta, this.gameObject);
         }
 
