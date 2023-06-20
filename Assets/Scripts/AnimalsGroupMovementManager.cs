@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class AnimalsGroupMovementManager : MonoBehaviour
 {
@@ -24,13 +25,16 @@ public class AnimalsGroupMovementManager : MonoBehaviour
         get { return _animalsGroupSize; }
     }
 
-    void Start()
+    private void Awake()
     {
         if (Instance != null && Instance != this)
             Destroy(this);
         else
             Instance = this;
+    }
 
+    void Start()
+    {
         _boxCollider = GetComponent<BoxCollider2D>();
         _boundsMin = _boxCollider.bounds.min;
         _boundsMax = _boxCollider.bounds.max;
@@ -41,13 +45,15 @@ public class AnimalsGroupMovementManager : MonoBehaviour
         EventBus.OnAnimalSpawned += DoPatrolMovement;
         EventBus.OnPlayerTouchedAnimal += CreateGroup;
         EventBus.OnAnimalSaved += DeleteFromGroup;
+        EventBus.OnPlayerMoved += MoveAnimalsWithPlayer;
     }
 
     private void OnDisable()
     {
         EventBus.OnAnimalSpawned -= DoPatrolMovement;
-        EventBus.OnPlayerTouchedAnimal += CreateGroup;
+        EventBus.OnPlayerTouchedAnimal -= CreateGroup;
         EventBus.OnAnimalSaved -= DeleteFromGroup;
+        EventBus.OnPlayerMoved -= MoveAnimalsWithPlayer;
     }
 
     private void CreateGroup(Vector3 positionDelta, GameObject animal)
@@ -75,12 +81,7 @@ public class AnimalsGroupMovementManager : MonoBehaviour
         }
     }
 
-    private void Update()
-    {
-        MoveGroup();
-    }
-
-    private void MoveGroup()
+    private void MoveAnimalsWithPlayer(Vector3 destination, float movementSpeed)
     {
         foreach (var (key, value) in _animalsInGroup)
         {
@@ -89,7 +90,7 @@ public class AnimalsGroupMovementManager : MonoBehaviour
             if (DOTween.IsTweening(animalTransform))
                 animalTransform.DOPause();
 
-            animalTransform.position = PlayerPosition.position + key;
+            animalTransform.DOMove(destination + key, movementSpeed).SetEase(Ease.Linear);
         }
     }
 }

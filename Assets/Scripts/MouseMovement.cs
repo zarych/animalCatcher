@@ -19,5 +19,7 @@ public class MouseMovement : MonoBehaviour
 
         _moveTweener?.Kill();
         _moveTweener = player.DOMove(_target, movementSpeed).SetEase(Ease.Linear);
+
+        EventBus.OnPlayerMoved?.Invoke(_target, movementSpeed);
     }
 }
